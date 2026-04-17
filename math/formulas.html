@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Тренажёр: формулы сокращённого умножения</title>
+  <link rel="stylesheet" href="../style.css" />
+  <style>
+    .wrapper {
+      max-width: 980px;
+      margin: 0 auto;
+    }
+
+    .trainer-box {
+      background: white;
+      border-radius: 18px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      padding: 24px;
+      margin: 24px 0;
+      text-align: center;
+    }
+
+    .big-expression {
+      font-size: 34px;
+      font-weight: bold;
+      margin: 20px 0;
+      line-height: 1.4;
+    }
+
+    .formula-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    button {
+      font-size: 17px;
+      padding: 10px 16px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      background: #2a5bd7;
+      color: white;
+      margin: 6px;
+    }
+
+    button:hover {
+      opacity: 0.92;
+    }
+
+    .secondary-btn {
+      background: #6c7a95;
+    }
+
+    input[type="text"] {
+      font-size: 22px;
+      padding: 10px 14px;
+      width: 220px;
+      border: 2px solid #cfd8ea;
+      border-radius: 10px;
+      text-align: center;
+      margin-right: 10px;
+    }
+
+    .feedback {
+      font-size: 20px;
+      margin-top: 16px;
+      min-height: 36px;
+      font-weight: 600;
+    }
+
+    .stats {
+      margin-top: 10px;
+      font-size: 16px;
+      color: #444;
+    }
+
+    .nav-links {
+      margin-top: 24px;
+    }
+
+    .nav-links a {
+      margin: 0 10px;
+      font-size: 18px;
+    }
+
+    .small-text {
+      font-size: 15px;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <header>
+      <h1>Тренажёр: формулы сокращённого умножения</h1>
+      <p>Учимся узнавать формулы и восстанавливать пропущенные части.</p>
+    </header>
+
+    <main>
+      <section class="trainer-box">
+        <h2>1. Узнай формулу</h2>
+        <p>Выбери, к какой формуле относится выражение:</p>
+
+        <div id="recognizeExpression" class="big-expression">(a+b)²</div>
+
+        <div class="formula-buttons">
+          <button onclick="checkRecognize('sumSquare')">Квадрат суммы</button>
+          <button onclick="checkRecognize('diffSquare')">Квадрат разности</button>
+          <button onclick="checkRecognize('squareDiff')">Разность квадратов</button>
+          <button onclick="checkRecognize('sumCubes')">Сумма кубов</button>
+          <button onclick="checkRecognize('diffCubes')">Разность кубов</button>
+        </div>
+
+        <div id="recognizeFeedback" class="feedback"></div>
+        <div id="recognizeStats" class="stats"></div>
+
+        <button class="secondary-btn" onclick="nextRecognizeTask()">Следующее выражение</button>
+      </section>
+
+      <section class="trainer-box">
+        <h2>2. Дополни формулу</h2>
+        <p>Впиши пропущенную часть без пробелов.</p>
+
+        <div id="fillTask" class="big-expression">(a+b)² = a² + ___ + b²</div>
+
+        <div>
+          <input type="text" id="fillInput" placeholder="Ответ" />
+          <button onclick="checkFillTask()">Проверить</button>
+        </div>
+
+        <div class="small-text">Примеры записи: 2ab, a+b, b²</div>
+        <div id="fillFeedback" class="feedback"></div>
+        <div id="fillStats" class="stats"></div>
+
+        <button class="secondary-btn" onclick="nextFillTask()">Следующее задание</button>
+      </section>
+
+      <div class="nav-links">
+        <a href="index.html">← Назад в математику</a>
+        <a href="../index.html">← На главную</a>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // ===== БЛОК 1. УЗНАЙ ФОРМУЛУ =====
+    const recognizeTasks = [
+      { expr: "(a+b)²", type: "sumSquare", explanation: "Это квадрат суммы." },
+      { expr: "(x-y)²", type: "diffSquare", explanation: "Это квадрат разности." },
+      { expr: "m²-n²", type: "squareDiff", explanation: "Это разность квадратов." },
+      { expr: "a³+b³", type: "sumCubes", explanation: "Это сумма кубов." },
+      { expr: "p³-q³", type: "diffCubes", explanation: "Это разность кубов." },
+      { expr: "x²-49", type: "squareDiff", explanation: "Это разность квадратов: x²-7²." },
+      { expr: "4a²-25", type: "squareDiff", explanation: "Это разность квадратов: (2a)²-5²." },
+      { expr: "8m³+27", type: "sumCubes", explanation: "Это сумма кубов: (2m)³+3³." },
+      { expr: "64-x³", type: "diffCubes", explanation: "Это разность кубов: 4³-x³." },
+      { expr: "(2k+3)²", type: "sumSquare", explanation: "Это квадрат суммы." },
+      { expr: "(5-b)²", type: "diffSquare", explanation: "Это квадрат разности." }
+    ];
+
+    let currentRecognizeTask = null;
+    let recognizeCorrect = 0;
+    let recognizeTotal = 0;
+
+    function randomFromArray(arr) {
+      return arr[Math.floor(Math.random() * arr.length)];
+    }
+
+    function nextRecognizeTask() {
+      currentRecognizeTask = randomFromArray(recognizeTasks);
+      document.getElementById("recognizeExpression").textContent = currentRecognizeTask.expr;
+      document.getElementById("recognizeFeedback").textContent = "";
+      updateRecognizeStats();
+    }
+
+    function checkRecognize(answer) {
+      recognizeTotal++;
+      const feedback = document.getElementById("recognizeFeedback");
+
+      if (answer === currentRecognizeTask.type) {
+        recognizeCorrect++;
+        feedback.textContent = "Верно! " + currentRecognizeTask.explanation;
+      } else {
+        feedback.textContent = "Неверно. " + currentRecognizeTask.explanation;
+      }
+
+      updateRecognizeStats();
+    }
+
+    function updateRecognizeStats() {
+      document.getElementById("recognizeStats").textContent =
+        `Правильно: ${recognizeCorrect} из ${recognizeTotal}`;
+    }
+
+    // ===== БЛОК 2. ДОПОЛНИ ФОРМУЛУ =====
+    const fillTasks = [
+      { task: "(a+b)² = a² + ___ + b²", answer: "2ab", hint: "Средний член: 2ab." },
+      { task: "(a-b)² = a² - ___ + b²", answer: "2ab", hint: "Средний член: 2ab." },
+      { task: "a²-b² = (a-b)(___)", answer: "a+b", hint: "Вторая скобка: a+b." },
+      { task: "a³+b³ = (a+b)(a²-ab+___)", answer: "b²", hint: "Последний член: b²." },
+      { task: "a³-b³ = (a-b)(a²+ab+___)", answer: "b²", hint: "Последний член: b²." },
+      { task: "(x+y)² = x² + ___ + y²", answer: "2xy", hint: "Средний член: 2xy." },
+      { task: "(m-n)² = m² - ___ + n²", answer: "2mn", hint: "Средний член: 2mn." },
+      { task: "p²-q² = (p-q)(___)", answer: "p+q", hint: "Вторая скобка: p+q." },
+      { task: "x³+8 = (x+2)(x²-2x+___)", answer: "4", hint: "2² = 4." },
+      { task: "27-y³ = (3-y)(___)", answer: "9+3y+y²", hint: "Для разности кубов: a²+ab+b²." }
+    ];
+
+    let currentFillTask = null;
+    let fillAttempts = 0;
+    let fillCorrect = 0;
+    let fillTotal = 0;
+
+    function normalizeText(text) {
+      return text
+        .toLowerCase()
+        .replace(/\s+/g, "")
+        .replace(/−/g, "-");
+    }
+
+    function nextFillTask() {
+      currentFillTask = randomFromArray(fillTasks);
+      fillAttempts = 0;
+      document.getElementById("fillTask").textContent = currentFillTask.task;
+      document.getElementById("fillInput").value = "";
+      document.getElementById("fillFeedback").textContent = "";
+      updateFillStats();
+    }
+
+    function checkFillTask() {
+      const input = document.getElementById("fillInput");
+      const feedback = document.getElementById("fillFeedback");
+      const userAnswer = normalizeText(input.value);
+      const correctAnswer = normalizeText(currentFillTask.answer);
+
+      if (userAnswer === "") {
+        feedback.textContent = "Введи ответ.";
+        return;
+      }
+
+      fillAttempts++;
+
+      if (userAnswer === correctAnswer) {
+        fillCorrect++;
+        fillTotal++;
+        feedback.textContent = "Верно!";
+        updateFillStats();
+      } else if (fillAttempts === 1) {
+        feedback.textContent = "Неверно. Попробуй ещё раз.";
+      } else {
+        fillTotal++;
+        feedback.textContent =
+          `Неверно. Правильный ответ: ${currentFillTask.answer}. ${currentFillTask.hint}`;
+        updateFillStats();
+      }
+    }
+
+    function updateFillStats() {
+      document.getElementById("fillStats").textContent =
+        `Правильно: ${fillCorrect} из ${fillTotal}`;
+    }
+
+    nextRecognizeTask();
+    nextFillTask();
+
+    document.getElementById("fillInput").addEventListener("keydown", function(event) {
+      if (event.key === "Enter") {
+        checkFillTask();
+      }
+    });
+  </script>
+</body>
+</html>
