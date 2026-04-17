@@ -207,7 +207,7 @@
     }
 
     function nextRecognitionTask() {
-      currentRecognitionNumber = randomInt(-1000, 1000);
+      currentRecognitionNumber = randomInt(-200, 200);
       document.getElementById("recognitionNumber").textContent = currentRecognitionNumber;
       document.getElementById("recognitionFeedback").textContent = "";
       updateRecognitionStats();
