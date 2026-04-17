@@ -214,12 +214,23 @@
     let fillCorrect = 0;
     let fillTotal = 0;
 
-    function normalizeText(text) {
-      return text
-        .toLowerCase()
-        .replace(/\s+/g, "")
-        .replace(/−/g, "-");
-    }
+   function normalizeText(text) {
+  return text
+    .toLowerCase()
+    .replace(/\s+/g, "")
+    .replace(/−/g, "-")
+    .replace(/²/g, "^2")
+    .replace(/³/g, "^3")
+    .replace(/a2/g, "a^2")
+    .replace(/b2/g, "b^2")
+    .replace(/c2/g, "c^2")
+    .replace(/x2/g, "x^2")
+    .replace(/y2/g, "y^2")
+    .replace(/m2/g, "m^2")
+    .replace(/n2/g, "n^2")
+    .replace(/p2/g, "p^2")
+    .replace(/q2/g, "q^2");
+}
 
     function nextFillTask() {
       currentFillTask = randomFromArray(fillTasks);
