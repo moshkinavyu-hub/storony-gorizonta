@@ -1,116 +1,21 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<title>Тренажёр: Стороны света и полушария</title>
-
-<style>
-body {
-    font-family: Arial, sans-serif;
-    background: #eef3ff;
-    padding: 20px;
-}
-h1 {
-    color: #2c3e50;
-}
-.task {
-    background: white;
-    padding: 15px;
-    margin-bottom: 15px;
-    border-radius: 10px;
-}
-select {
-    margin-top: 5px;
-}
-button {
-    margin-top: 20px;
-    padding: 10px 20px;
-    font-size: 15px;
-    border-radius: 8px;
-    border: none;
-    background: #4CAF50;
-    color: white;
-    cursor: pointer;
-}
-button:hover {
-    background: #45a049;
-}
-.result {
-    font-weight: bold;
-    margin-top: 5px;
-}
-.correct { color: green; }
-.incorrect { color: red; }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Учебный тренажёр</title>
+  <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
+  <header>
+    <h1>Учебный тренажёр</h1>
+    <p>Выбери предмет</p>
+  </header>
 
-<h1>🧭 Тренажёр «Стороны света и полушария»</h1>
-<p>Выбери правильный ответ.</p>
-
-<div id="tasks"></div>
-
-<button onclick="check()">Проверить ответы</button>
-<h2 id="final"></h2>
-
-<script>
-const questions = [
-["С какой стороны горизонта встаёт солнце?", ["С севера","С востока","С запада"], 1],
-["С какой стороны горизонта заходит солнце?", ["С востока","С юга","С запада"], 2],
-["Какая сторона горизонта противоположна северу?", ["Запад","Юг","Восток"], 1],
-["Если стоять лицом к северу, где будет восток?", ["Слева","Справа","Сзади"], 1],
-["Какая сторона горизонта находится между севером и востоком?", ["Юго-восток","Северо-восток","Северо-запад"], 1],
-["На карте север обычно находится…", ["Слева","Сверху","Снизу"], 1],
-["Если на карте север сверху, где находится юг?", ["Снизу","Справа","Слева"], 0],
-["Если на карте восток справа, где находится запад?", ["Слева","Снизу","Сверху"], 0],
-["В каком полушарии находится Евразия?", ["Южном","Северном","Западном"], 1],
-["В каком полушарии находится Австралия?", ["Северном","Южном","Западном"], 1],
-["Как называется линия, делящая Землю на Северное и Южное полушария?", ["Меридиан","Экватор","Полюс"], 1],
-["Северный полюс находится в каком направлении?", ["На севере","На юге","На западе"], 0],
-["Южный полюс находится в каком направлении?", ["На востоке","На севере","На юге"], 2],
-["Если объект находится южнее тебя, в каком направлении ты должен идти?", ["На север","На юг","На запад"], 1],
-["Если объект находится западнее тебя, в каком направлении ты должен идти?", ["На восток","На север","На запад"], 2],
-["Какая сторона горизонта находится между югом и востоком?", ["Юго-восток","Юго-запад","Северо-восток"], 0],
-["Какая сторона горизонта находится между севером и западом?", ["Юго-запад","Северо-запад","Юго-восток"], 1],
-["В каком направлении находится север, если юг у тебя за спиной?", ["Спереди","Слева","Справа"], 0],
-["Если солнце слева от тебя утром, куда ты смотришь?", ["На север","На юг","На запад"], 0],
-["Какое направление соответствует верхней части карты?", ["Юг","Север","Запад"], 1]
-];
-
-const container = document.getElementById("tasks");
-
-questions.forEach((q, i) => {
-    container.innerHTML += `
-    <div class="task">
-        <b>${i+1}. ${q[0]}</b><br>
-        <select id="q${i}">
-            <option value="">Выбери ответ</option>
-            ${q[1].map((opt, idx) => `<option value="${idx}">${opt}</option>`).join("")}
-        </select>
-        <div id="r${i}" class="result"></div>
-    </div>
-    `;
-});
-
-function check() {
-    let score = 0;
-    questions.forEach((q, i) => {
-        const ans = document.getElementById(`q${i}`).value;
-        const res = document.getElementById(`r${i}`);
-        if (ans == q[2]) {
-            res.innerHTML = "✔ Верно";
-            res.className = "result correct";
-            score++;
-        } else {
-            res.innerHTML = "✘ Неверно";
-            res.className = "result incorrect";
-        }
-    });
-    document.getElementById("final").innerHTML =
-        `🏆 Результат: ${score} из ${questions.length}`;
-}
-</script>
-
+  <main class="cards">
+    <a class="card" href="math/index.html">Математика</a>
+    <div class="card">Русский<br><small>Скоро</small></div>
+    <div class="card">География<br><small>Скоро</small></div>
+  </main>
 </body>
 </html>
